@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+        integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <style>
+        img {
+            width: 100%;
+        }
+    </style>
+    <title>Mongo File Uploads</title>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-6 m-auto">
+                <h1 class="text-center display-4 my-4"></h1>
+                <form action="/upload" method="POST" enctype="multipart/form-data">
+                    <div class="custom-file mb-3">
+
+                        <input type="file" name="file" id="file" class="custom-file-input" accept="application/pdf">
+                        <label for="file" class="custom-file-label">Choose File</label>
+                    </div>
+                    <div class="form-group">
+                        Title<input class="form-control" type="text" name="title">
+                    </div>
+                    <div class="form-group">
+                        Description<input class="form-control" type="text" name="description">
+                    </div>
+                    <input type="submit" value="Submit" class="btn btn-primary btn-block">
+                </form>
+                <hr>
+                <% if(files){ %>
+                <% files.forEach(function(file) { %>
+                <div class="card card-body mb-3">
+                    <% if(file.isImage) { %>
+                    <img src="image/<%= file.filename %>" alt="">
+                    <% } else { %>
+                    <h4>Title of file = <%= file.metadata["title"] %></h4>
+                    <h4>File description = <%= file.metadata["description"] %></h4>
+                    <h4>View file = <a href="/files/<%= file.filename %>" target="_blank"><%= file.filename %></a></h4>
+                    <% } %>
+                    <form method="POST" action="/files/<%= file._id %>?_method=DELETE">
+                        <button class="btn btn-danger btn-block mt-4">Delete</button>
+                    </form>
+                </div>
+                <% }) %>
+                <% } else { %>
+                <p>No files to show</p>
+                <% } %>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+
+</html>
